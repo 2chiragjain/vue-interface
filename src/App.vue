@@ -1,26 +1,40 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="main-app" class="container" >
+    <div class="row justify-content-center">
+      <appointmentlist :appointments="appointments" @remove="removeItem"/>
+    </div>
+    
+    
+
+  </div>  
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+// import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome"
+import axios from "axios"
+import Appointmentlist from "./components/AppointmentList";
+import _ from "lodash";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  name: 'MainApp',
+  data: function() {
+    return {
+      title: "Appointment List",
+      appointments: []
+    };
+  },
+  components:{
+    Appointmentlist
+  },
+  mounted() {
+    axios
+    .get("/data/appointments.json")
+    .then(response => (this.appointments = response.data));
+  },
+  methods: {
+    removeItem: function(apt){
+      this.appointments=_.without(this.appointments,apt);
+    }
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
